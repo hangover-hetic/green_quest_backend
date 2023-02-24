@@ -2,7 +2,7 @@
 
 ## SETUP
 ```shell
-docker-compose up -d
+docker compose up -d
 sudo chown -R $USER ./
 ```
 
