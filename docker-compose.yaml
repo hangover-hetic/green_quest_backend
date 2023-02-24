@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+    symfony:
+        build: symfony_config
+        container_name: symfony_docker
+        ports:
+            - "8245:80"
+        volumes:
+            - ./symfony_config/vhosts:/etc/apache2/sites-enabled
+            - ./greenquest:/var/www/greenquest
+        restart: always
+        networks:
+            - dev
+
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: greenquest_admin
+            POSTGRES_PASSWORD: root
+            POSTGRES_DB: greenquest
+        networks:
+            - dev
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - "8080:8080"
+        networks:
+            - dev
+
+    #   DO YOU REALLY NEED THIS ?
+    #    maildev:
+    #        image: maildev/maildev
+    #        container_name: maildev_docker
+    #        command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
+    #        ports:
+    #            - "8081:80"
+    #        restart: always
+    #        networks:
+    #            - dev
+
+networks:
+    dev:
+
+volumes:
+    db-data:
