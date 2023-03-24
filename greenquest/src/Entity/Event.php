@@ -29,8 +29,11 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $position = [];
+    #[ORM\Column]
+    private ?float $longitude = null;
+
+    #[ORM\Column]
+    private ?float $latitude = null;
 
     public function getId(): ?int
     {
@@ -61,15 +64,28 @@ class Event
         return $this;
     }
 
-    public function getPosition(): array
+    public function getLongitude(): ?float
     {
-        return $this->position;
+        return $this->longitude;
     }
 
-    public function setPosition(array $position): self
+    public function setLongitude(float $longitude): self
     {
-        $this->position = $position;
+        $this->longitude = $longitude;
 
         return $this;
     }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
 }

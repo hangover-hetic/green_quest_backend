@@ -14,7 +14,8 @@ class AppFixtures extends Fixture
             $event = new Event();
             $event->setTitle( "Title", $i ); 
             $event->setDescription( "Description", $i );
-            $event->setPosition( [12, 20, 50] );
+            $event->setLongitude( 20 );
+            $event->setLatitude( 10 );
             $manager->persist($event);
         }
 
