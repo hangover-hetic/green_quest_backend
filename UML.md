@@ -30,6 +30,8 @@ classDiagram
         String title
         String description
         float[] position
+        int blob 
+        int exp
         Chat chat
         Feed feed
         Gallery gallery

@@ -16,9 +16,13 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
 RUN docker-php-ext-configure \
             intl \
     &&  docker-php-ext-install \
-            pdo pdo_mysql opcache intl zip calendar dom mbstring gd xsl \
+            opcache intl zip calendar dom mbstring gd xsl \
 \
     &&  pecl install apcu && docker-php-ext-enable apcu
+
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 
