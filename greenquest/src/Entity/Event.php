@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CreateEventController;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(),
-        new Post(),
+        new Post(controller: CreateEventController::class),
         new Delete(),
         new Put(),
         new GetCollection()
@@ -115,5 +116,7 @@ class Event
 
         return $this;
     }
+
+
 
 }

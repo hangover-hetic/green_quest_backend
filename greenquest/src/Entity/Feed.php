@@ -28,6 +28,7 @@ class Feed
 
     #[ORM\OneToMany(mappedBy: 'feed', targetEntity: FeedPost::class, orphanRemoval: true)]
     #[Groups('feed:read')]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $posts;
 
     public function __construct()
