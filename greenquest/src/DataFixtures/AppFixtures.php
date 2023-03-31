@@ -38,10 +38,6 @@ class AppFixtures extends Fixture
             $event->setDescription( "Description", $i );
             $event->setLongitude( 20 );
             $event->setLatitude( 10 );
-            $manager->persist($event);
-        }
-
-        for( $i = 0; $i < 10; $i++ ){
             $feed = new Feed();
             $manager->persist($feed);
 
@@ -50,6 +46,8 @@ class AppFixtures extends Fixture
                     'feed' => $feed
                 ];
             });
+            $event->setFeed($feed);
+            $manager->persist($event);
         }
 
         $manager->flush();
