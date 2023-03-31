@@ -14,3 +14,8 @@ cd greenquest
 ```
 
 [UML](./UML.md)
+
+Generate the SSL keys
+```shell
+php bin/console lexik:jwt:generate-keypair
+```
