@@ -28,6 +28,6 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | b
 
 RUN apt install
 
-WORKDIR /var/www/
+WORKDIR /var/www/greenquest
 
 

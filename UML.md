@@ -59,14 +59,14 @@ classDiagram
         Gallery gallery
     }
 
-    Feed-->Post
+    Feed-->FeedPost
     Feed-->Survey
     class Feed {
-        Post[] posts
+        FeedPost[] posts
         Survey[] surveys
     }
 
-    class Post {
+    class FeedPost {
         String title
         String content
     }
