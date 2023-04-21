@@ -2,60 +2,80 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Controller\CreateFeedPostController;
 use App\Repository\FeedPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: FeedPostRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ApiResource(operations: [
-    new Get(),
-    new Post(),
-    new Patch(),
-    new Delete()
-])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Post(inputFormats: ['multipart' => ['multipart/form-data']]),
+        new Delete()
+    ],
+    normalizationContext: ['groups' => ['feed_post:read']],
+    denormalizationContext: ['groups' => ['feed_post:write']],
+)
+]
+#[Vich\Uploadable]
 class FeedPost
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read', 'feed_post:write'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read', 'feed_post:write'])]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['feed:read', 'feed_post:read', 'feed_post:write'])]
     private ?Feed $feed = null;
 
     #[ORM\Column]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'feedPosts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups('feed:read')]
+    #[Groups(['feed:read', 'feed_post:read', 'feed_post:write'])]
     private ?User $author = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups('feed:read')]
-    private ?string $coverUrl = null;
+
+    #[Vich\UploadableField(mapping: 'feed_post_cover', fileNameProperty: 'coverPath')]
+    #[Groups(['feed_post:write'])]
+    public ?File $coverFile = null;
+
+
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['feed:read', 'feed_post:read'])]
+    public ?string $coverUrl = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $coverPath = null;
 
     public function getId(): ?int
     {
@@ -154,5 +174,21 @@ class FeedPost
         $this->coverUrl = $coverUrl;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCoverPath(): ?string
+    {
+        return $this->coverPath;
+    }
+
+    /**
+     * @param string|null $coverPath
+     */
+    public function setCoverPath(?string $coverPath): void
+    {
+        $this->coverPath = $coverPath;
     }
 }

@@ -1,6 +1,6 @@
 # Greenquest api
 
-[Adminer](https://localhost:8080/?pgsql=db&username=greenquest_admin&db=greenquest&ns=public)
+[Adminer](http://localhost:8080/?pgsql=db&username=greenquest_admin&db=greenquest&ns=public)
 
 ## SETUP
 ```shell
