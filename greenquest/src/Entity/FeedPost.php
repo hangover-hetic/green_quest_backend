@@ -48,6 +48,15 @@ class FeedPost
     #[Groups('feed:read')]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'feedPosts')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups('feed:read')]
+    private ?User $author = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('feed:read')]
+    private ?string $coverUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,5 +130,29 @@ class FeedPost
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTimeImmutable('now'));
         }
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getCoverUrl(): ?string
+    {
+        return $this->coverUrl;
+    }
+
+    public function setCoverUrl(string $coverUrl): self
+    {
+        $this->coverUrl = $coverUrl;
+
+        return $this;
     }
 }

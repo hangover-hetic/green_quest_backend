@@ -20,6 +20,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $users = [];
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user->setEmail('user' . $i . '@example.com');
@@ -30,8 +31,9 @@ class AppFixtures extends Fixture
             $user->setBlobs(0);
             $user->setRoles(['ROLE_USER']);
             $manager->persist($user);
+            $users[] = $user;
         }
-        
+
         for( $i = 0; $i < 10; $i++ ){
             $event = new Event();
             $event->setTitle( "Title", $i );
@@ -41,9 +43,10 @@ class AppFixtures extends Fixture
             $feed = new Feed();
             $manager->persist($feed);
 
-            FeedPostFactory::createMany(rand(3, 10), function() use ($feed) {
+            FeedPostFactory::createMany(rand(3, 10), function() use ($feed, $users) {
                 return [
-                    'feed' => $feed
+                    'feed' => $feed,
+                    'author' => $users[rand(0, count($users) - 1)],
                 ];
             });
             $event->setFeed($feed);

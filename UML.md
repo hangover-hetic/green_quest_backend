@@ -66,9 +66,13 @@ classDiagram
         Survey[] surveys
     }
 
+    FeedPost-->User
     class FeedPost {
         String title
         String content
+        User author
+        DateTime createdAt
+        DateTime updatedAt
     }
 
     Survey-->Choice
