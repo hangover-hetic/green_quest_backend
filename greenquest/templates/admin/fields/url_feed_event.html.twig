@@ -1,0 +1,10 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% set url = ea_url()
+    .setController('App\\Controller\\Admin\\FeedPostCrudController')
+    .setAction('index')
+    .set('filters[feed][value]', entity.instance.feed.id)
+    .set('filters[feed][comparison]', '=')
+%}
+<a href="{{ url }}">{{ field.formattedValue }}</a>

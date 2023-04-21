@@ -70,4 +70,9 @@ class Feed
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return 'Feed#' . $this->id;
+    }
 }

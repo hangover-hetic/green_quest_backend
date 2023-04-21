@@ -6,9 +6,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Controller\CreateFeedPostController;
 use App\Repository\FeedPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -190,5 +188,10 @@ class FeedPost
     public function setCoverPath(?string $coverPath): void
     {
         $this->coverPath = $coverPath;
+    }
+
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }

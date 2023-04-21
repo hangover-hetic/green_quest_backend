@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Feed;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 
 class FeedCrudController extends AbstractCrudController
 {
@@ -12,14 +14,11 @@ class FeedCrudController extends AbstractCrudController
         return Feed::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            AssociationField::new("posts")
         ];
     }
-    */
 }
