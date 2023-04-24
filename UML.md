@@ -59,16 +59,20 @@ classDiagram
         Gallery gallery
     }
 
-    Feed-->Post
+    Feed-->FeedPost
     Feed-->Survey
     class Feed {
-        Post[] posts
+        FeedPost[] posts
         Survey[] surveys
     }
 
-    class Post {
+    FeedPost-->User
+    class FeedPost {
         String title
         String content
+        User author
+        DateTime createdAt
+        DateTime updatedAt
     }
 
     Survey-->Choice

@@ -1,5 +1,7 @@
 # Greenquest api
 
+[Adminer](http://localhost:8080/?pgsql=db&username=greenquest_admin&db=greenquest&ns=public)
+
 ## SETUP
 ```shell
 docker compose up -d
