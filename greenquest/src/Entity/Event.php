@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
 use App\Controller\CreateEventController;
 use App\Controller\GetEventController;
+use App\Controller\GetEventsController;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(controller: CreateEventController::class),
         new Delete(),
         new Put(),
-        new GetCollection()
+        new GetCollection(controller: GetEventsController::class)
     ],normalizationContext: ['groups' => ['event:read']]
 )]
 class Event
