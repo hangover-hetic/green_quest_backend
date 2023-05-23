@@ -14,7 +14,7 @@ class GetEventController extends AbstractController
     public function __invoke(Event $event, EntityManagerInterface $manager): JsonResponse
     {
         $participantIds = $event->getParticipations()->map(function ($participant) {
-            return $participant->getUserId()->getId();
+            return $participant;
         });
 
         $responseData = [
