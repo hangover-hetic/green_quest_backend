@@ -9,33 +9,39 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        users:
+        app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
-
     firewalls:
         dev:
-            pattern: ^/_(profiler|wdt)
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            pattern: ^/api/
+
+        login:
+            pattern: ^/api/login
             stateless: true
-            provider: users
-            jwt: ~
-        main:
             json_login:
-                check_path: auth # The name in routes.yaml is enough for mapping
-                username_path: email
-                password_path: password
+                check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            custom_authenticator: App\Security\AppCustomAuthenticator
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
 
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
+        # main:
+        #     lazy: true
+        #     provider: app_user_provider
+        #     logout:
+        #         path: /logout
+        #     custom_authenticator: App\Security\AppCustomAuthenticator
+
+        # activate different ways to authenticate
+        # https://symfony.com/doc/current/security.html#the-firewall
+
+        # https://symfony.com/doc/current/security/impersonating_user.html
+        # switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
