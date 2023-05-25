@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class MeCrudController extends AbstractController
 {
 
     #[Route('/me', name: 'me', methods: ['GET'])]
