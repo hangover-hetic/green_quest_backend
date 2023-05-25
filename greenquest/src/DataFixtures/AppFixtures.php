@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Participation;
 use App\Entity\User;
 use App\Entity\Event;
 use App\Entity\Feed;
@@ -21,6 +22,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $users = [];
+        $events = [];
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user->setEmail('user' . $i . '@example.com');
@@ -43,6 +45,7 @@ class AppFixtures extends Fixture
             $feed = new Feed();
             $manager->persist($feed);
 
+
             FeedPostFactory::createMany(rand(3, 10), function() use ($feed, $users) {
                 return [
                     'feed' => $feed,
@@ -51,7 +54,21 @@ class AppFixtures extends Fixture
             });
             $event->setFeed($feed);
             $manager->persist($event);
+            $events[] = $event;
         }
+
+        for ($i = 0; $i < 10; $i++) {
+            $participation = new Participation();
+            $participation->setRoles(['ROLE_USER']);
+            $participation->setEvent($events[rand(0, count($events) - 1)]);
+            $participation->setUserId($users[rand(0, count($users) - 1)]);
+            $manager->persist($participation);
+
+
+
+        }
+
+
 
         $manager->flush();
     }

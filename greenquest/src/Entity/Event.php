@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
@@ -9,7 +10,11 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Put;
 use App\Controller\CreateEventController;
+use App\Controller\GetEventController;
+use App\Controller\GetEventsController;
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,11 +22,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(),
+        new Get(controller: GetEventController::class),
         new Post(controller: CreateEventController::class),
         new Delete(),
         new Put(),
-        new GetCollection()
+        new GetCollection(controller: GetEventsController::class)
     ],normalizationContext: ['groups' => ['event:read']]
 )]
 class Event
@@ -51,6 +56,14 @@ class Event
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups('event:read')]
     private ?Feed $feed = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participation::class, orphanRemoval: true)]
+    private Collection $participations;
+
+    public function __construct()
+    {
+        $this->participations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -113,6 +126,36 @@ class Event
     public function setFeed(?Feed $feed): self
     {
         $this->feed = $feed;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): self
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations->add($participation);
+            $participation->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): self
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getEvent() === $this) {
+                $participation->setEvent(null);
+            }
+        }
 
         return $this;
     }
