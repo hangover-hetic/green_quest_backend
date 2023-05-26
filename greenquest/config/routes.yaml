@@ -7,3 +7,7 @@ controllers:
 api_login_check:
     path: /api/login_check
     methods: ["POST"]
+
+me:
+    path: /api/me
+    controller: App\Controller\MeCrudController

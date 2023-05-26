@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MeCrudController extends AbstractController
 {
+
+    #[Route('/me', name: 'me', methods: ['GET'])]
     public function __invoke(): JsonResponse
     {
         $user = $this->getUser();
