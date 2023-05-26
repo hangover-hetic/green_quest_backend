@@ -23,7 +23,7 @@ use ApiPlatform\Metadata\Put;
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
-        new Get(controller: MeCrudController::class, uriTemplate: '/me', read: false),
+        new Get(),
         new Post(),
         new Delete(),
         new Put(),
