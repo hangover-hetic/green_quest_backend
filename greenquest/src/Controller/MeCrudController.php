@@ -8,10 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MeCrudController extends AbstractController
 {
-
-
-
-
     public function __invoke(): JsonResponse
     {
         $user = $this->getUser();
@@ -23,9 +19,15 @@ class MeCrudController extends AbstractController
 
         // Renvoyer les informations de l'utilisateur
         $responseData = [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'exp' => $user->getExp(),
+            'blobs' => $user->getBlobs(),
             'roles' => $user->getRoles(),
         ];
 
-        return new JsonResponse($responseData);
+        return $this->json($responseData);
     }
 }
