@@ -7,4 +7,7 @@ vich_uploader:
       uri_prefix: /files/postCover
       upload_destination: '%kernel.project_dir%/public/files/postCover'
       namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
-
+    event_cover:
+      uri_prefix: /files/eventCover
+      upload_destination: '%kernel.project_dir%/public/files/eventCover'
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
