@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use App\Controller\CreateUserController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +25,7 @@ use ApiPlatform\Metadata\Put;
 #[ApiResource(
     operations: [
         new Get(),
-        new Post(),
+        new Post(controller: CreateUserController::class),
         new Delete(),
         new Put(),
         new GetCollection(),
