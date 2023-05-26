@@ -12,7 +12,6 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
     \
     &&  curl -sS https://getcomposer.org/installer | php -- \
     &&  mv composer.phar /usr/local/bin/composer
-
 RUN docker-php-ext-configure \
     intl \
     &&  docker-php-ext-install \

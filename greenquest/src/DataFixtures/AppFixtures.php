@@ -40,8 +40,8 @@ class AppFixtures extends Fixture
             $event = new Event();
             $event->setTitle( "Title", $i );
             $event->setDescription( "Description", $i );
-            $event->setLongitude( 20 );
-            $event->setLatitude( 10 );
+            $event->setLongitude( 48.890097499161904  );
+            $event->setLatitude( 2.2235745698877807 );
             $feed = new Feed();
             $manager->persist($feed);
 

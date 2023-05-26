@@ -5,6 +5,10 @@ namespace App\Encoder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
+function stringIsFloat(string $string) : bool {
+    return is_numeric($string) && strpos($string, '.') !== false;
+}
+
 final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
@@ -26,7 +30,15 @@ final class MultipartDecoder implements DecoderInterface
                 // Multipart form values will be encoded in JSON.
                 $decoded = json_decode($element, true);
 
-                return \is_array($decoded) ? $decoded : $element;
+                if(is_array($decoded)) {
+                    return $decoded;
+                }
+
+                if(stringIsFloat($element)) {
+                    return floatval($element);
+                }
+
+                return $element;
             }, $request->request->all()) + $request->files->all();
     }
 

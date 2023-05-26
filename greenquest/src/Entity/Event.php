@@ -16,17 +16,24 @@ use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
+#[Vich\Uploadable]
 #[ApiResource(
     operations: [
+        new Get(),
+        new Post(inputFormats: ['multipart' => ['multipart/form-data']], controller: CreateEventController::class),
         new Get(controller: GetEventController::class),
-        new Post(controller: CreateEventController::class),
         new Delete(),
         new Put(),
         new GetCollection(controller: GetEventsController::class)
-    ],normalizationContext: ['groups' => ['event:read']]
+    ],
+    normalizationContext: ['groups' => ['event:read']],
+    denormalizationContext: ['groups' => ['event:write']]
 )]
 class Event
 {
@@ -37,24 +44,43 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('event:read')]
+    #[Groups(['event:read', 'event:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('event:read')]
+    #[Groups(['event:read', 'event:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 0, max: 255)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    #[Groups('event:read')]
+    #[ORM\Column(type: 'float', precision: 6, scale: 2)]
+    #[Groups(['event:read', 'event:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: -180, max: 180)]
     private ?float $longitude = null;
 
-    #[ORM\Column]
-    #[Groups('event:read')]
+    #[ORM\Column(type: "float", precision: 6, scale: 2)]
+    #[Groups(['event:read', 'event:write'])]
+    #[Assert\NotBlank]
+    #[Assert\Range(min: -180, max: 180)]
     private ?float $latitude = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups('event:read')]
     private ?Feed $feed = null;
+
+    #[Vich\UploadableField(mapping: 'event_cover', fileNameProperty: 'coverPath')]
+    #[Groups(['event:write'])]
+    public ?File $coverFile = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $coverPath = null;
+
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['event:read', 'event:write'])]
+    public ?string $coverUrl = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participation::class, orphanRemoval: true)]
     private Collection $participations;
@@ -129,12 +155,25 @@ class Event
         return $this;
     }
 
+    public function getCoverPath(): ?string
+    {
+        return $this->coverPath;
+    }
+
     /**
      * @return Collection<int, Participation>
      */
     public function getParticipations(): Collection
     {
         return $this->participations;
+    }
+
+    /**
+     * @param string|null $coverPath
+     */
+    public function setCoverPath(?string $coverPath): void
+    {
+        $this->coverPath = $coverPath;
     }
 
     public function addParticipation(Participation $participation): self
@@ -144,8 +183,15 @@ class Event
             $participation->setEvent($this);
         }
 
+
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->title;
+    }
+
 
     public function removeParticipation(Participation $participation): self
     {
@@ -158,7 +204,6 @@ class Event
 
         return $this;
     }
-
 
 
 }
