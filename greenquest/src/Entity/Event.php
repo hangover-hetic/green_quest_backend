@@ -85,6 +85,9 @@ class Event
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participation::class, orphanRemoval: true)]
     private Collection $participations;
 
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    private ?Category $category = null;
+
     public function __construct()
     {
         $this->participations = new ArrayCollection();
@@ -201,6 +204,18 @@ class Event
                 $participation->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
