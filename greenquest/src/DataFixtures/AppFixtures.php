@@ -38,10 +38,12 @@ class AppFixtures extends Fixture
 
         for( $i = 0; $i < 10; $i++ ){
             $event = new Event();
-            $event->setTitle( "Title", $i );
-            $event->setDescription( "Description", $i );
+            $event->setTitle( "Event $i");
+            $event->setDescription( "Description");
             $event->setLongitude( 48.890097499161904  );
             $event->setLatitude( 2.2235745698877807 );
+            $event->setDate( new \DateTime() );
+            $event->setAuthor( $users[rand(0, count($users) - 1)] );
             $feed = new Feed();
             $manager->persist($feed);
 
@@ -63,9 +65,6 @@ class AppFixtures extends Fixture
             $participation->setEvent($events[rand(0, count($events) - 1)]);
             $participation->setUserId($users[rand(0, count($users) - 1)]);
             $manager->persist($participation);
-
-
-
         }
 
 

@@ -38,6 +38,10 @@ final class MultipartDecoder implements DecoderInterface
                     return floatval($element);
                 }
 
+                if(filter_var($element, FILTER_VALIDATE_INT)) {
+                    return intval($element);
+                }
+
                 return $element;
             }, $request->request->all()) + $request->files->all();
     }

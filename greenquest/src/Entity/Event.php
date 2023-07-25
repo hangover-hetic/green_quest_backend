@@ -15,6 +15,7 @@ use App\Controller\GetEventsController;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -25,7 +26,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Vich\Uploadable]
 #[ApiResource(
     operations: [
-        new Get(),
         new Post(inputFormats: ['multipart' => ['multipart/form-data']], controller: CreateEventController::class),
         new Get(controller: GetEventController::class),
         new Delete(),
@@ -87,6 +87,19 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'event')]
     private ?Category $category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups('event:read')]
+    private ?User $author = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: false)]
+    #[Groups(['event:read', 'event:write'])]
+    private ?\DateTimeInterface $date = null;
+
+    #[ORM\Column]
+    #[Groups(['event:read', 'event:write'])]
+    private ?int $maxParticipationNumber = 10;
 
     public function __construct()
     {
@@ -171,6 +184,11 @@ class Event
         return $this->participations;
     }
 
+    public function getParticipationsNumber(): int
+    {
+        return $this->participations->count();
+    }
+
     /**
      * @param string|null $coverPath
      */
@@ -212,10 +230,46 @@ class Event
     {
         return $this->category;
     }
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
 
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMaxParticipationNumber(): ?int
+    {
+        return $this->maxParticipationNumber;
+    }
+
+    public function setMaxParticipationNumber(int $maxParticipationNumber): self
+    {
+        $this->maxParticipationNumber = $maxParticipationNumber;
 
         return $this;
     }
