@@ -6,6 +6,7 @@ use App\Entity\Participation;
 use App\Entity\User;
 use App\Entity\Event;
 use App\Entity\Feed;
+use App\Entity\Category;
 use App\Factory\FeedPostFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -67,7 +68,11 @@ class AppFixtures extends Fixture
             $manager->persist($participation);
         }
 
-
+        for ($i = 0; $i < 10; $i++) {
+            $category = new Category();
+            $category->setTitle("category", $i);
+            $manager->persist($category);
+        }
 
         $manager->flush();
     }
