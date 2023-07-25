@@ -3,22 +3,37 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\CreateParticipationController;
 use App\Repository\ParticipationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
 #[UniqueEntity(fields: ['userId', 'event'], message: 'Vous avez déjà participé à cet événement.')]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(controller: CreateParticipationController::class),
+        new Delete(),
+    ]
+)]
 class Participation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::ARRAY)]
+    #[Groups(['event:read'])]
     private array $roles = [];
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
@@ -27,6 +42,7 @@ class Participation
 
     #[ORM\ManyToOne(inversedBy: 'participations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['event:read'])]
     private ?User $userId = null;
 
     public function getId(): ?int

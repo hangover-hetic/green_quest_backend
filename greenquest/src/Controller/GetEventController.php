@@ -17,9 +17,6 @@ class GetEventController extends AbstractController
     }
     public function __invoke(Event $event, EntityManagerInterface $manager): JsonResponse
     {
-        $participantIds = $event->getParticipations()->map(function ($participant) {
-            return $participant;
-        });
 
         $responseData = [
             'id' => $event->getId(),
@@ -29,9 +26,13 @@ class GetEventController extends AbstractController
             'latitude' => $event->getLatitude(),
             'feed' => $event->getFeed()->getId(),
             'coverUrl' =>  $this->storage->resolveUri($event, 'coverFile'),
-            'participantIds' => $participantIds,
+            'author' => $event->getAuthor(),
+            'date' => $event->getDate(),
+            'maxParticipationNumber' => $event->getMaxParticipationNumber(),
+            'participations' => $event->getParticipations(),
+            'participantsNumber' => $event->getParticipationsNumber()
         ];
 
-        return $this->json($responseData);
+        return $this->json($responseData, 200, [], ['groups' => ['event:read']]);
     }
 }

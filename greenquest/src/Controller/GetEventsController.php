@@ -22,9 +22,6 @@ class GetEventsController extends AbstractController
         $responseData = [];
 
         foreach ($events as $event) {
-            $participantIds = $event->getParticipations()->map(function ($participant) {
-                return $participant->getUserId()->getId();
-            });
 
             $responseData[] = [
                 'id' => $event->getId(),
@@ -34,10 +31,13 @@ class GetEventsController extends AbstractController
                 'latitude' => (double)$event->getLatitude(),
                 'coverUrl' =>  $this->storage->resolveUri($event, 'coverFile'),
                 'feed' => $event->getFeed()->getId(),
-                'participantIds' => $participantIds,
+                'author' => $event->getAuthor(),
+                'date' => $event->getDate(),
+                'maxParticipationNumber' => $event->getMaxParticipationNumber(),
+                'participantsNumber' => $event->getParticipationsNumber(),
             ];
         }
 
-        return $this->json($responseData);
+        return $this->json($responseData, 200, [], ['groups' => ['event:read']]);
     }
 }

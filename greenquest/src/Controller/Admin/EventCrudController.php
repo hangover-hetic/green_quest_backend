@@ -6,6 +6,7 @@ use App\Entity\Event;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -34,9 +35,12 @@ class EventCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('title'),
             TextEditorField::new('description'),
+            DateTimeField::new("date"),
             NumberField::new("longitude"),
             NumberField::new("latitude"),
+            NumberField::new("maxParticipationNumber"),
             AssociationField::new("feed"),
+            AssociationField::new('author'),
             ImageField::new('coverPath')->setFormType(VichImageType::class)->setBasePath("/files/eventCover")->hideOnForm()
         ];
     }
