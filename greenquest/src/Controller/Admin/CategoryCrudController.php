@@ -23,6 +23,10 @@ class CategoryCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('title'),
             AssociationField::new('event')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+            ])
+            ->autocomplete()
         ];
     }
 }
