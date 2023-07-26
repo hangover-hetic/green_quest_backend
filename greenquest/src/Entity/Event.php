@@ -44,7 +44,7 @@ class Event
     #[ORM\Column]
     #[Groups(
         [
-                'event:read', 
+                'event:read',
                 'get:collection:event',
                 'category:read'
         ]
@@ -53,7 +53,7 @@ class Event
 
     #[ORM\Column(length: 255)]
     #[Groups([
-                'event:read', 
+                'event:read',
                 'event:write',
                 'category:read'
             ]
@@ -64,7 +64,7 @@ class Event
 
     #[ORM\Column(length: 255)]
     #[Groups([
-                'event:read', 
+                'event:read',
                 'event:write',
                 'get:collection:event:normalization',
                 'get:collection:event:denormalization'
@@ -76,7 +76,7 @@ class Event
 
     #[ORM\Column(type: 'float', precision: 6, scale: 2)]
     #[Groups([
-                'event:read', 
+                'event:read',
                 'event:write',
                 'get:collection:event:normalization',
                 'get:collection:event:denormalization'
@@ -89,7 +89,7 @@ class Event
     #[ORM\Column(type: "float", precision: 6, scale: 2)]
     #[Groups(
         [
-            'event:read', 
+            'event:read',
             'event:write',
         ]
     )]
@@ -100,7 +100,7 @@ class Event
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups(
         [
-            'event:read', 
+            'event:read',
             'get:collection:event:normalization',
             'get:collection:event:denormalization'
         ]
@@ -159,7 +159,8 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: false)]
     #[Groups(
         [
-            'event:read'
+            'event:read',
+            'event:write'
         ]
     )]
     private ?\DateTimeInterface $date = null;
