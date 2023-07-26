@@ -110,7 +110,7 @@ class Event
     #[Vich\UploadableField(mapping: 'event_cover', fileNameProperty: 'coverPath')]
     #[Groups(
         [
-            'event:read'
+            'event:write'
         ]
     )]
     public ?File $coverFile = null;
