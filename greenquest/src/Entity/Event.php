@@ -37,7 +37,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     normalizationContext: ['groups' => ['event:read']],
     denormalizationContext: ['groups' => ['event:write']]
 )]
-#[ApiFilter(SearchFilter::class, properties: ["category.title" => "iexact"])]
 class Event
 {
     #[ORM\Id]
