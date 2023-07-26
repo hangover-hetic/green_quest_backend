@@ -17,6 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
     private Generator $faker;
+
     public function __construct(private readonly UserPasswordHasherInterface $passwordEncoder)
     {
         $this->faker = Factory::create();
@@ -39,20 +40,30 @@ class AppFixtures extends Fixture
             $users[] = $user;
         }
 
-        for( $i = 0; $i < 10; $i++ ){
+        $possible_categories = ['Nettoyage de plage', 'Jardinage', 'Nettoyage de rue', 'Nettoyage de forêt', 'Nettoyage de parc', 'Nettoyage de lac', 'Nettoyage de rivière', 'Nettoyage de montagne', 'Nettoyage de campagne', 'Nettoyage de ville', 'Nettoyage de village', 'Nettoyage de quartier'];
+        $categories = [];
+        foreach ($possible_categories as $category) {
+            $cat = new Category();
+            $cat->setTitle($category);
+            $manager->persist($cat);
+            $categories[] = $cat;
+        }
+
+        for ($i = 0; $i < 10; $i++) {
             $event = new Event();
-            $event->setTitle( "Event $i");
-            $event->setDescription( "Description");
-            $event->setLongitude( $this->faker->longitude(2.20, 2.23)  );
-            $event->setLatitude( $this->faker->longitude(48.88, 48.90) );
+            $event->setTitle("Event $i");
+            $event->setDescription("Description");
+            $event->setLongitude($this->faker->longitude(2.20, 2.23));
+            $event->setLatitude($this->faker->longitude(48.88, 48.90));
             $event->setCoverPath('trash.jpg');
-            $event->setDate( new \DateTime() );
-            $event->setAuthor( $users[rand(0, count($users) - 1)] );
+            $event->setDate(new \DateTime());
+            $event->setAuthor($users[rand(0, count($users) - 1)]);
+            $event->setCategory($this->faker->randomElement($categories));
             $feed = new Feed();
             $manager->persist($feed);
 
 
-            FeedPostFactory::createMany(rand(3, 10), function() use ($feed, $users) {
+            FeedPostFactory::createMany(rand(3, 10), function () use ($feed, $users) {
                 return [
                     'feed' => $feed,
                     'author' => $users[rand(0, count($users) - 1)],
@@ -71,11 +82,6 @@ class AppFixtures extends Fixture
             $manager->persist($participation);
         }
 
-        for ($i = 0; $i < 10; $i++) {
-            $category = new Category();
-            $category->setTitle("category", $i);
-            $manager->persist($category);
-        }
 
         $manager->flush();
     }
