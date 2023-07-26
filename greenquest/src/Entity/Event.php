@@ -32,76 +32,145 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new Get(controller: GetEventController::class),
         new Delete(),
         new Put(),
-        new GetCollection(controller: GetEventsController::class)
+        new GetCollection(controller: GetEventsController::class),
     ],
     normalizationContext: ['groups' => ['event:read']],
     denormalizationContext: ['groups' => ['event:write']]
 )]
-
+#[ApiFilter(SearchFilter::class, properties: ["category.title" => "iexact"])]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('event:read')]
+    #[Groups(
+        [
+                'event:read', 
+                'get:collection:event',
+                'category:read'
+        ]
+    )]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups([
+                'event:read', 
+                'event:write',
+                'category:read'
+            ]
+    )]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups([
+                'event:read', 
+                'event:write',
+                'get:collection:event:normalization',
+                'get:collection:event:denormalization'
+            ]
+    )]
     #[Assert\NotBlank]
     #[Assert\Length(min: 0, max: 255)]
     private ?string $description = null;
 
     #[ORM\Column(type: 'float', precision: 6, scale: 2)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups([
+                'event:read', 
+                'event:write',
+                'get:collection:event:normalization',
+                'get:collection:event:denormalization'
+            ])
+    ]
     #[Assert\NotBlank]
     #[Assert\Range(min: -180, max: 180)]
     private ?float $longitude = null;
 
     #[ORM\Column(type: "float", precision: 6, scale: 2)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(
+        [
+            'event:read', 
+            'event:write',
+        ]
+    )]
     #[Assert\NotBlank]
     #[Assert\Range(min: -180, max: 180)]
     private ?float $latitude = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups('event:read')]
+    #[Groups(
+        [
+            'event:read', 
+            'get:collection:event:normalization',
+            'get:collection:event:denormalization'
+        ]
+    )]
     private ?Feed $feed = null;
 
     #[Vich\UploadableField(mapping: 'event_cover', fileNameProperty: 'coverPath')]
-    #[Groups(['event:write'])]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     public ?File $coverFile = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(
+        [
+            'event:read',
+        ]
+    )]
     private ?string $coverPath = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     public ?string $coverUrl = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Participation::class, orphanRemoval: true)]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     private Collection $participations;
 
     #[ORM\ManyToOne(inversedBy: 'event')]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups('event:read')]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     private ?User $author = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column]
-    #[Groups(['event:read', 'event:write'])]
+    #[Groups(
+        [
+            'event:read'
+        ]
+    )]
     private ?int $maxParticipationNumber = 10;
 
     public function __construct()
