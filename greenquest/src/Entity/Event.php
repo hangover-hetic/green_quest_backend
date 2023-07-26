@@ -119,6 +119,7 @@ class Event
     #[Groups(
         [
             'event:read',
+            'event:write'
         ]
     )]
     private ?string $coverPath = null;
