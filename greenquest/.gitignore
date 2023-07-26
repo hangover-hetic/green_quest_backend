@@ -5,7 +5,10 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/files/
+public/files/*
+!public/files/eventCover/
+public/files/eventCover/*
+!public/files/eventCover/trash.jpg
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
