@@ -9,14 +9,16 @@ use App\Entity\Feed;
 use App\Factory\FeedPostFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-
+    private Generator $faker;
     public function __construct(private readonly UserPasswordHasherInterface $passwordEncoder)
     {
-
+        $this->faker = Factory::create();
     }
 
     public function load(ObjectManager $manager): void
@@ -40,8 +42,9 @@ class AppFixtures extends Fixture
             $event = new Event();
             $event->setTitle( "Event $i");
             $event->setDescription( "Description");
-            $event->setLongitude( 48.890097499161904  );
-            $event->setLatitude( 2.2235745698877807 );
+            $event->setLongitude( $this->faker->longitude(2.20, 2.23)  );
+            $event->setLatitude( $this->faker->longitude(48.88, 48.90) );
+            $event->setCoverPath('trash.jpg');
             $event->setDate( new \DateTime() );
             $event->setAuthor( $users[rand(0, count($users) - 1)] );
             $feed = new Feed();
