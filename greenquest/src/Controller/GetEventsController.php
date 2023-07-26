@@ -22,7 +22,7 @@ class GetEventsController extends AbstractController
         $responseData = [];
 
         foreach ($events as $event) {
-
+            dump($event);
             $responseData[] = [
                 'id' => $event->getId(),
                 'title' => $event->getTitle(),
@@ -35,6 +35,7 @@ class GetEventsController extends AbstractController
                 'date' => $event->getDate(),
                 'maxParticipationNumber' => $event->getMaxParticipationNumber(),
                 'participantsNumber' => $event->getParticipationsNumber(),
+                'category'           => $event->getCategory()
             ];
         }
 

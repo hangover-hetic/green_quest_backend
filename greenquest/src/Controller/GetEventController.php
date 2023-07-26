@@ -30,7 +30,8 @@ class GetEventController extends AbstractController
             'date' => $event->getDate(),
             'maxParticipationNumber' => $event->getMaxParticipationNumber(),
             'participations' => $event->getParticipations(),
-            'participantsNumber' => $event->getParticipationsNumber()
+            'participantsNumber' => $event->getParticipationsNumber(),
+            'category'           => $event->getCategory()
         ];
 
         return $this->json($responseData, 200, [], ['groups' => ['event:read']]);

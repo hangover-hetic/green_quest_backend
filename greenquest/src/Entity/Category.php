@@ -9,21 +9,42 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['event.id' => 'iexact'])]
+#[ApiResource(
+    normalizationContext: ['groups' => ['category:read']],
+    denormalizationContext: ['groups' => ['category:write']]
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(
+        [
+            'category:read',
+            'event:read'
+        ]
+    )]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(
+        [
+            'category:read',
+            'event:read'
+        ]
+    )]
     private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Event::class)]
+    #[Groups(
+        [
+            'category:read',
+            'event:read'
+        ]
+    )]
     private Collection $event;
 
     public function __construct()
